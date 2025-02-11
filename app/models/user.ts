@@ -7,13 +7,17 @@ import { DbAccessTokensProvider } from '@adonisjs/auth/access_tokens'
 import type { HasOne, BelongsTo } from '@adonisjs/lucid/types/relations'
 import Profile from './profile.js'
 import Role from './role.js'
+import MyCustomNamingStrategy from '../strategies/custom_strategies.js'
 
 const AuthFinder = withAuthFinder(() => hash.use('scrypt'), {
   uids: ['email'],
   passwordColumnName: 'password',
 })
 
+BaseModel.namingStrategy = new MyCustomNamingStrategy();
+
 export default class User extends compose(BaseModel, AuthFinder) {
+
   @column({ isPrimary: true })
   declare id: number
 
@@ -26,7 +30,7 @@ export default class User extends compose(BaseModel, AuthFinder) {
   @column()
   declare active: boolean
 
-  @column()
+  @column({ serializeAs: 'role_id' })
   declare role_id: number
 
   @column({ serializeAs: null })

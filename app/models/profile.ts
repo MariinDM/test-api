@@ -2,15 +2,19 @@ import { DateTime } from 'luxon'
 import { BaseModel, belongsTo, column } from '@adonisjs/lucid/orm'
 import type { BelongsTo } from '@adonisjs/lucid/types/relations'
 import User from './user.js'
+import MyCustomNamingStrategy from '../strategies/custom_strategies.js';
+
+BaseModel.namingStrategy = new MyCustomNamingStrategy();
 
 export default class Profile extends BaseModel {
+
   @column({ isPrimary: true })
   declare id: number
 
   @column()
   declare name: string
 
-  @column()
+  @column({ serializeAs: 'last_name' })
   declare last_name: string
 
   @column()
@@ -19,7 +23,7 @@ export default class Profile extends BaseModel {
   @column()
   declare phone: string
 
-  @column()
+  @column({ serializeAs: 'user_id' })
   declare user_id: number
 
   @column.dateTime({ autoCreate: true })
